@@ -220,7 +220,7 @@ function injectDentalWatermark() {
     '    height: 100svh;',
     '    max-width: none;',
     '    aspect-ratio: auto;',
-    '    opacity: 0.5;',
+    '    opacity: 0.58;',
     '    transform: none;',
     '    filter: saturate(0.98) contrast(1.04) brightness(1.02);',
     '    -webkit-mask-image: none;',
@@ -237,11 +237,12 @@ function injectDentalWatermark() {
   const tooth = document.createElement('div');
   tooth.className = 'bg-tooth-watermark';
   tooth.setAttribute('aria-hidden', 'true');
-  tooth.innerHTML = '<picture><source media="(max-width: 540px)" srcset="assets/dental-background-mobile-v2.jpg"><img src="assets/dental-background.jpg" alt="" loading="eager"></picture>';
+  tooth.innerHTML = '<picture><source media="(max-width: 540px)" srcset="assets/dental-background-mobile-v3.jpg"><img src="assets/dental-background.jpg" alt="" loading="eager"></picture>';
 
   const bg = document.querySelector('.bg-deco');
   (bg || document.body).appendChild(tooth);
   injectGlassSurfaceStyles();
+  injectReviewsCut();
 }
 
 function injectGlassSurfaceStyles() {
@@ -257,22 +258,22 @@ function injectGlassSurfaceStyles() {
     '}',
     '.hero, .acc-block, .reviews-block, .sheet {',
     '  background: linear-gradient(135deg, rgba(255,255,255,0.46), rgba(255,255,255,0.24));',
-    '  backdrop-filter: blur(28px) saturate(1.28);',
-    '  -webkit-backdrop-filter: blur(28px) saturate(1.28);',
+    '  backdrop-filter: saturate(1.08);',
+    '  -webkit-backdrop-filter: saturate(1.08);',
     '  border-color: rgba(255,255,255,0.78);',
     '  box-shadow: 0 18px 56px rgba(13,24,42,0.12), inset 0 1px 0 rgba(255,255,255,0.86), inset 0 -1px 0 rgba(255,255,255,0.18);',
     '}',
     '.review-card {',
     '  background: linear-gradient(135deg, rgba(255,255,255,0.38), rgba(255,255,255,0.22));',
     '  border-color: rgba(255,255,255,0.58);',
-    '  backdrop-filter: blur(18px) saturate(1.18);',
-    '  -webkit-backdrop-filter: blur(18px) saturate(1.18);',
+    '  backdrop-filter: saturate(1.05);',
+    '  -webkit-backdrop-filter: saturate(1.05);',
     '  box-shadow: inset 0 1px 0 rgba(255,255,255,0.58);',
     '}',
     '.contacts-block {',
     '  background: linear-gradient(135deg, rgba(10,16,38,0.78), rgba(22,35,68,0.56));',
-    '  backdrop-filter: blur(28px) saturate(1.15);',
-    '  -webkit-backdrop-filter: blur(28px) saturate(1.15);',
+    '  backdrop-filter: saturate(1.05);',
+    '  -webkit-backdrop-filter: saturate(1.05);',
     '  border-color: rgba(230,237,248,0.16);',
     '}',
     '.f-input {',
@@ -280,16 +281,68 @@ function injectGlassSurfaceStyles() {
     '}',
     '@media (max-width: 540px) {',
     '  .hero, .acc-block, .reviews-block, .sheet {',
-    '    background: linear-gradient(135deg, rgba(255,255,255,0.34), rgba(255,255,255,0.14));',
-    '    backdrop-filter: blur(16px) saturate(1.2);',
-    '    -webkit-backdrop-filter: blur(16px) saturate(1.2);',
+    '    background: linear-gradient(135deg, rgba(255,255,255,0.38), rgba(255,255,255,0.18));',
+    '    backdrop-filter: saturate(1.05);',
+    '    -webkit-backdrop-filter: saturate(1.05);',
     '  }',
     '  .review-card {',
-    '    background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.12));',
+    '    background: linear-gradient(135deg, rgba(255,255,255,0.34), rgba(255,255,255,0.16));',
     '  }',
     '}'
   ].join('\n');
   document.head.appendChild(style);
+}
+
+function injectReviewsCut() {
+  const block = document.querySelector('.reviews-block');
+  const list = block && block.querySelector('.reviews-scroll');
+  const cards = list ? Array.from(list.querySelectorAll('.review-card')) : [];
+  if (!block || !list || cards.length <= 1 || block.querySelector('.reviews-toggle')) return;
+
+  if (!document.querySelector('#reviews-cut-tuning')) {
+    const style = document.createElement('style');
+    style.id = 'reviews-cut-tuning';
+    style.textContent = [
+      '.reviews-block:not(.reviews-open) .review-extra {',
+      '  display: none;',
+      '}',
+      '.reviews-toggle {',
+      '  display: block;',
+      '  width: 100%;',
+      '  margin: 14px 0 0;',
+      '  padding: 13px 18px;',
+      '  border: 1.5px solid rgba(12,26,56,0.72);',
+      '  border-radius: 999px;',
+      '  background: rgba(255,255,255,0.24);',
+      '  color: #0C1A38;',
+      '  font: 400 14px var(--sans, Inter, sans-serif);',
+      '  letter-spacing: 0.02em;',
+      '  cursor: pointer;',
+      '  backdrop-filter: saturate(1.04);',
+      '  -webkit-backdrop-filter: saturate(1.04);',
+      '}',
+      '.reviews-toggle:active {',
+      '  transform: scale(0.98);',
+      '}'
+    ].join('\n');
+    document.head.appendChild(style);
+  }
+
+  cards.slice(1).forEach(function(card) {
+    card.classList.add('review-extra');
+  });
+
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'reviews-toggle';
+  btn.setAttribute('aria-expanded', 'false');
+  btn.textContent = 'Показать ещё отзывы';
+  btn.addEventListener('click', function() {
+    const open = block.classList.toggle('reviews-open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    btn.textContent = open ? 'Скрыть отзывы' : 'Показать ещё отзывы';
+  });
+  list.after(btn);
 }
 
   </script>
