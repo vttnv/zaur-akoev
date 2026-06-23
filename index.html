@@ -189,20 +189,14 @@ function injectDentalWatermark() {
   style.textContent = [
     '.bg-tooth-watermark {',
     '  position: fixed;',
-    '  top: 52%;',
-    '  left: 50%;',
-    '  width: min(122vw, 980px);',
-    '  aspect-ratio: 2 / 1;',
-    '  opacity: 0.34;',
+    '  inset: 0;',
+    '  width: 100vw;',
+    '  height: 100svh;',
+    '  opacity: 0.58;',
     '  pointer-events: none;',
-    '  transform: translate(-34%, -50%);',
-    '  transform-origin: center;',
     '  z-index: 0;',
-    '  filter: saturate(0.66) contrast(0.98) brightness(1.08);',
-    '  mix-blend-mode: multiply;',
+    '  filter: saturate(0.98) contrast(1.04) brightness(1.02);',
     '  overflow: hidden;',
-    '  -webkit-mask-image: radial-gradient(ellipse at 48% 50%, #000 0%, #000 54%, transparent 82%);',
-    '  mask-image: radial-gradient(ellipse at 48% 50%, #000 0%, #000 54%, transparent 82%);',
     '}',
     '.bg-blob-1, .bg-blob-2, .bg-blob-3 {',
     '  display: none !important;',
@@ -214,24 +208,11 @@ function injectDentalWatermark() {
     '}',
     '.bg-tooth-watermark img {',
     '  object-fit: cover;',
-    '  object-position: center;',
+    '  object-position: center center;',
     '}',
     '@media (max-width: 540px) {',
     '  .bg-tooth-watermark {',
-    '    inset: 0;',
-    '    width: 100vw;',
-    '    height: 100svh;',
-    '    max-width: none;',
-    '    aspect-ratio: auto;',
-    '    opacity: 0.58;',
-    '    transform: none;',
-    '    filter: saturate(0.98) contrast(1.04) brightness(1.02);',
-    '    -webkit-mask-image: none;',
-    '    mask-image: none;',
-    '  }',
-    '  .bg-tooth-watermark img {',
-    '    object-fit: cover;',
-    '    object-position: center top;',
+    '    opacity: 0.62;',
     '  }',
     '}'
   ].join('\n');
@@ -240,7 +221,7 @@ function injectDentalWatermark() {
   const tooth = document.createElement('div');
   tooth.className = 'bg-tooth-watermark';
   tooth.setAttribute('aria-hidden', 'true');
-  tooth.innerHTML = '<picture><source media="(max-width: 540px)" srcset="assets/dental-background-mobile-v3.jpg"><img src="assets/dental-background.jpg" alt="" loading="eager"></picture>';
+  tooth.innerHTML = '<img src="assets/dental-background-mobile-v4.jpg" alt="" loading="eager">';
 
   const bg = document.querySelector('.bg-deco');
   (bg || document.body).appendChild(tooth);
