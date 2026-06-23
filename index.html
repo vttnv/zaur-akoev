@@ -225,8 +225,28 @@ function injectDentalWatermark() {
 
   const bg = document.querySelector('.bg-deco');
   (bg || document.body).appendChild(tooth);
+  injectHeroAvatar();
   injectGlassSurfaceStyles();
   injectReviewsCut();
+}
+
+function injectHeroAvatar() {
+  const img = document.querySelector('.hero-photo img');
+  if (!img) return;
+
+  img.src = 'assets/zaur-avatar.jpg';
+  img.loading = 'eager';
+
+  if (!document.querySelector('#hero-avatar-tuning')) {
+    const style = document.createElement('style');
+    style.id = 'hero-avatar-tuning';
+    style.textContent = [
+      '.hero-photo img {',
+      '  object-position: center center;',
+      '}'
+    ].join('\n');
+    document.head.appendChild(style);
+  }
 }
 
 function injectGlassSurfaceStyles() {
