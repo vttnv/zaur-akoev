@@ -303,6 +303,19 @@ function injectReviewsCut() {
     const style = document.createElement('style');
     style.id = 'reviews-cut-tuning';
     style.textContent = [
+      '.reviews-block:not(.reviews-open) {',
+      '  display: grid;',
+      '  grid-template-columns: minmax(0, 1fr) 44px;',
+      '  align-items: center;',
+      '  gap: 14px;',
+      '  padding: 22px 24px;',
+      '}',
+      '.reviews-block:not(.reviews-open) .block-title {',
+      '  margin: 0;',
+      '}',
+      '.reviews-block:not(.reviews-open) .reviews-scroll {',
+      '  display: none;',
+      '}',
       '.reviews-block:not(.reviews-open) .review-extra {',
       '  display: none;',
       '}',
@@ -321,6 +334,20 @@ function injectReviewsCut() {
       '  backdrop-filter: saturate(1.04);',
       '  -webkit-backdrop-filter: saturate(1.04);',
       '}',
+      '.reviews-block:not(.reviews-open) .reviews-toggle {',
+      '  width: 44px;',
+      '  height: 44px;',
+      '  margin: 0;',
+      '  padding: 0;',
+      '  border-radius: 50%;',
+      '  font-size: 0;',
+      '  line-height: 1;',
+      '}',
+      '.reviews-block:not(.reviews-open) .reviews-toggle::before {',
+      '  content: "+";',
+      '  display: block;',
+      '  font: 300 28px/40px var(--sans, Inter, sans-serif);',
+      '}',
       '.reviews-toggle:active {',
       '  transform: scale(0.98);',
       '}'
@@ -336,11 +363,11 @@ function injectReviewsCut() {
   btn.type = 'button';
   btn.className = 'reviews-toggle';
   btn.setAttribute('aria-expanded', 'false');
-  btn.textContent = 'Показать ещё отзывы';
+  btn.textContent = 'Показать отзывы';
   btn.addEventListener('click', function() {
     const open = block.classList.toggle('reviews-open');
     btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    btn.textContent = open ? 'Скрыть отзывы' : 'Показать ещё отзывы';
+    btn.textContent = open ? 'Скрыть отзывы' : 'Показать отзывы';
   });
   list.after(btn);
 }
