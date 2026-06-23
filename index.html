@@ -191,14 +191,13 @@ function injectDentalWatermark() {
     '  position: fixed;',
     '  top: 50%;',
     '  left: 50%;',
-    '  width: min(86vw, 620px);',
-    '  color: rgba(26,79,204,0.2);',
-    '  opacity: 0.82;',
+    '  width: min(92vw, 720px);',
+    '  opacity: 0.92;',
     '  pointer-events: none;',
-    '  transform: translate(-42%, -50%) rotate(-7deg);',
+    '  transform: translate(-42%, -49%) rotate(-8deg);',
     '  transform-origin: center;',
     '  z-index: 0;',
-    '  filter: drop-shadow(0 34px 80px rgba(61,82,213,0.12));',
+    '  filter: saturate(0.96);',
     '}',
     '.bg-tooth-watermark svg {',
     '  display: block;',
@@ -207,13 +206,12 @@ function injectDentalWatermark() {
     '}',
     '@media (max-width: 540px) {',
     '  .bg-tooth-watermark {',
-    '    top: 54%;',
-    '    left: 54%;',
-    '    width: 510px;',
+    '    top: 53%;',
+    '    left: 51%;',
+    '    width: 650px;',
     '    max-width: none;',
-    '    color: rgba(26,79,204,0.18);',
-    '    opacity: 0.76;',
-    '    transform: translate(-50%, -50%) rotate(-7deg);',
+    '    opacity: 0.86;',
+    '    transform: translate(-50%, -50%) rotate(-8deg);',
     '  }',
     '}'
   ].join('\n');
@@ -223,19 +221,37 @@ function injectDentalWatermark() {
   tooth.className = 'bg-tooth-watermark';
   tooth.setAttribute('aria-hidden', 'true');
   tooth.innerHTML =
-    '<svg viewBox="0 0 220 260" xmlns="http://www.w3.org/2000/svg" focusable="false">' +
+    '<svg viewBox="0 0 260 320" xmlns="http://www.w3.org/2000/svg" focusable="false">' +
       '<defs>' +
-        '<radialGradient id="toothGlow" cx="50%" cy="38%" r="72%">' +
-          '<stop offset="0%" stop-color="rgba(255,255,255,0.82)"/>' +
-          '<stop offset="52%" stop-color="rgba(232,238,248,0.38)"/>' +
-          '<stop offset="100%" stop-color="rgba(61,82,213,0.08)"/>' +
+        '<filter id="toothSoftBlur" x="-30%" y="-30%" width="160%" height="170%">' +
+          '<feGaussianBlur stdDeviation="9"/>' +
+        '</filter>' +
+        '<linearGradient id="toothPorcelain" x1="72" y1="36" x2="196" y2="286" gradientUnits="userSpaceOnUse">' +
+          '<stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.92"/>' +
+          '<stop offset="36%" stop-color="#EEF2F8" stop-opacity="0.58"/>' +
+          '<stop offset="68%" stop-color="#D8E2F4" stop-opacity="0.3"/>' +
+          '<stop offset="100%" stop-color="#C7D6F2" stop-opacity="0.18"/>' +
+        '</linearGradient>' +
+        '<radialGradient id="toothInnerLight" cx="43%" cy="24%" r="74%">' +
+          '<stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.86"/>' +
+          '<stop offset="46%" stop-color="#F5F8FC" stop-opacity="0.34"/>' +
+          '<stop offset="100%" stop-color="#B8C9EF" stop-opacity="0"/>' +
+        '</radialGradient>' +
+        '<radialGradient id="toothCoolShadow" cx="78%" cy="64%" r="70%">' +
+          '<stop offset="0%" stop-color="#7E96D8" stop-opacity="0.3"/>' +
+          '<stop offset="54%" stop-color="#BFCBE9" stop-opacity="0.12"/>' +
+          '<stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>' +
         '</radialGradient>' +
       '</defs>' +
-      '<path d="M109 24c-18.7-15.4-47.4-13-66.2 6.5C19.4 54.7 20.7 91.7 37.6 125c11.6 22.8 15 48.9 18.6 73.5 4.2 28.6 11.4 45.3 24.2 45.3 12.1 0 17.9-18.4 23.3-42.8 3.7-16.8 8.1-27.4 14.3-27.4 6.2 0 10.6 10.6 14.3 27.4 5.4 24.4 11.2 42.8 23.3 42.8 12.8 0 20-16.7 24.2-45.3 3.6-24.6 7-50.7 18.6-73.5 16.9-33.3 18.2-70.3-5.2-94.5-18.8-19.5-47.5-21.9-66.2-6.5-5.8 4.8-12 7.1-18 7.1s-12.2-2.3-18-7.1Z" fill="url(#toothGlow)" opacity="0.34"/>' +
-      '<path d="M109 24c-18.7-15.4-47.4-13-66.2 6.5C19.4 54.7 20.7 91.7 37.6 125c11.6 22.8 15 48.9 18.6 73.5 4.2 28.6 11.4 45.3 24.2 45.3 12.1 0 17.9-18.4 23.3-42.8 3.7-16.8 8.1-27.4 14.3-27.4 6.2 0 10.6 10.6 14.3 27.4 5.4 24.4 11.2 42.8 23.3 42.8 12.8 0 20-16.7 24.2-45.3 3.6-24.6 7-50.7 18.6-73.5 16.9-33.3 18.2-70.3-5.2-94.5-18.8-19.5-47.5-21.9-66.2-6.5-5.8 4.8-12 7.1-18 7.1s-12.2-2.3-18-7.1Z" fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.46"/>' +
-      '<path d="M57 76c5.4-17.8 20.1-28.9 36.5-27.2" fill="none" stroke="currentColor" stroke-width="3.8" stroke-linecap="round" opacity="0.34"/>' +
-      '<path d="M156 62c12.1 5.6 19.2 18.6 18.4 34.2" fill="none" stroke="currentColor" stroke-width="3.8" stroke-linecap="round" opacity="0.24"/>' +
-      '<path d="M67 151c10.2 13.2 22.6 19.9 37.2 20.1" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" opacity="0.12"/>' +
+      '<path d="M131 34c-23.2-17.6-58.4-13.7-80.7 9.4C22.9 71.8 25 115.7 45.2 154.8c14.3 27.6 18.2 59.2 22.7 88.8 5.3 34.9 14.2 55.1 30.1 55.1 14.8 0 22-22.5 28.7-52.3 4.5-19.9 9.4-32.5 16.7-32.5 7.4 0 12.3 12.6 16.8 32.5 6.7 29.8 13.9 52.3 28.7 52.3 15.9 0 24.9-20.2 30.1-55.1 4.5-29.6 8.4-61.2 22.7-88.8 20.2-39.1 22.3-83-5.1-111.4-22.3-23.1-57.5-27-80.7-9.4-7.6 5.8-16 9.1-24.5 9.1-8.4 0-16.8-3.3-24.4-9.1Z" fill="#8199D8" opacity="0.16" filter="url(#toothSoftBlur)" transform="translate(2 16)"/>' +
+      '<path d="M131 34c-23.2-17.6-58.4-13.7-80.7 9.4C22.9 71.8 25 115.7 45.2 154.8c14.3 27.6 18.2 59.2 22.7 88.8 5.3 34.9 14.2 55.1 30.1 55.1 14.8 0 22-22.5 28.7-52.3 4.5-19.9 9.4-32.5 16.7-32.5 7.4 0 12.3 12.6 16.8 32.5 6.7 29.8 13.9 52.3 28.7 52.3 15.9 0 24.9-20.2 30.1-55.1 4.5-29.6 8.4-61.2 22.7-88.8 20.2-39.1 22.3-83-5.1-111.4-22.3-23.1-57.5-27-80.7-9.4-7.6 5.8-16 9.1-24.5 9.1-8.4 0-16.8-3.3-24.4-9.1Z" fill="url(#toothPorcelain)"/>' +
+      '<path d="M131 34c-23.2-17.6-58.4-13.7-80.7 9.4C22.9 71.8 25 115.7 45.2 154.8c14.3 27.6 18.2 59.2 22.7 88.8 5.3 34.9 14.2 55.1 30.1 55.1 14.8 0 22-22.5 28.7-52.3 4.5-19.9 9.4-32.5 16.7-32.5 7.4 0 12.3 12.6 16.8 32.5 6.7 29.8 13.9 52.3 28.7 52.3 15.9 0 24.9-20.2 30.1-55.1 4.5-29.6 8.4-61.2 22.7-88.8 20.2-39.1 22.3-83-5.1-111.4-22.3-23.1-57.5-27-80.7-9.4-7.6 5.8-16 9.1-24.5 9.1-8.4 0-16.8-3.3-24.4-9.1Z" fill="url(#toothInnerLight)"/>' +
+      '<path d="M131 34c-23.2-17.6-58.4-13.7-80.7 9.4C22.9 71.8 25 115.7 45.2 154.8c14.3 27.6 18.2 59.2 22.7 88.8 5.3 34.9 14.2 55.1 30.1 55.1 14.8 0 22-22.5 28.7-52.3 4.5-19.9 9.4-32.5 16.7-32.5 7.4 0 12.3 12.6 16.8 32.5 6.7 29.8 13.9 52.3 28.7 52.3 15.9 0 24.9-20.2 30.1-55.1 4.5-29.6 8.4-61.2 22.7-88.8 20.2-39.1 22.3-83-5.1-111.4-22.3-23.1-57.5-27-80.7-9.4-7.6 5.8-16 9.1-24.5 9.1-8.4 0-16.8-3.3-24.4-9.1Z" fill="url(#toothCoolShadow)"/>' +
+      '<path d="M131 34c-23.2-17.6-58.4-13.7-80.7 9.4C22.9 71.8 25 115.7 45.2 154.8c14.3 27.6 18.2 59.2 22.7 88.8 5.3 34.9 14.2 55.1 30.1 55.1 14.8 0 22-22.5 28.7-52.3 4.5-19.9 9.4-32.5 16.7-32.5 7.4 0 12.3 12.6 16.8 32.5 6.7 29.8 13.9 52.3 28.7 52.3 15.9 0 24.9-20.2 30.1-55.1 4.5-29.6 8.4-61.2 22.7-88.8 20.2-39.1 22.3-83-5.1-111.4-22.3-23.1-57.5-27-80.7-9.4-7.6 5.8-16 9.1-24.5 9.1-8.4 0-16.8-3.3-24.4-9.1Z" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-opacity="0.55"/>' +
+      '<path d="M67 86c6.8-21.9 24.6-34.3 45.4-31.9" fill="none" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" stroke-opacity="0.28" filter="url(#toothSoftBlur)"/>' +
+      '<path d="M70 86c6.4-19.8 23.4-30.8 41.8-29.1" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-opacity="0.55"/>' +
+      '<path d="M176 70c16.7 7.4 25.4 25.1 22.9 46.6" fill="none" stroke="#C6D4F2" stroke-width="5" stroke-linecap="round" stroke-opacity="0.18"/>' +
+      '<path d="M80 174c12.3 15.9 27.6 24 45.7 24.4" fill="none" stroke="#FFFFFF" stroke-width="3.4" stroke-linecap="round" stroke-opacity="0.16"/>' +
     '</svg>';
 
   const bg = document.querySelector('.bg-deco');
