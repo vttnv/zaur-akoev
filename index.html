@@ -237,7 +237,7 @@ function injectDentalWatermark() {
   const tooth = document.createElement('div');
   tooth.className = 'bg-tooth-watermark';
   tooth.setAttribute('aria-hidden', 'true');
-  tooth.innerHTML = '<picture><source media="(max-width: 540px)" srcset="assets/dental-background-mobile.jpg"><img src="assets/dental-background.jpg" alt="" loading="eager"></picture>';
+  tooth.innerHTML = '<picture><source media="(max-width: 540px)" srcset="assets/dental-background-mobile-v2.jpg"><img src="assets/dental-background.jpg" alt="" loading="eager"></picture>';
 
   const bg = document.querySelector('.bg-deco');
   (bg || document.body).appendChild(tooth);
