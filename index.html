@@ -185,6 +185,13 @@ document.addEventListener('DOMContentLoaded', async function() {
 function injectDentalWatermark() {
   if (document.querySelector('.bg-tooth-watermark')) return;
 
+  if (!document.querySelector('link[rel="icon"]')) {
+    const icon = document.createElement('link');
+    icon.rel = 'icon';
+    icon.href = 'data:,';
+    document.head.appendChild(icon);
+  }
+
   const style = document.createElement('style');
   style.textContent = [
     '.bg-tooth-watermark {',
@@ -227,6 +234,7 @@ function injectDentalWatermark() {
   (bg || document.body).appendChild(tooth);
   injectHeroAvatar();
   injectGlassSurfaceStyles();
+  injectPracticeGallery();
   injectReviewsCut();
 }
 
@@ -260,7 +268,7 @@ function injectGlassSurfaceStyles() {
     '  --card-border: rgba(255,255,255,0.76);',
     '  --border: rgba(150,163,184,0.28);',
     '}',
-    '.hero, .acc-block, .reviews-block, .sheet {',
+    '.hero, .acc-block, .practice-gallery, .reviews-block, .sheet {',
     '  background: linear-gradient(135deg, rgba(255,255,255,0.46), rgba(255,255,255,0.24));',
     '  backdrop-filter: saturate(1.08);',
     '  -webkit-backdrop-filter: saturate(1.08);',
@@ -284,7 +292,7 @@ function injectGlassSurfaceStyles() {
     '  background: rgba(248,250,253,0.66);',
     '}',
     '@media (max-width: 540px) {',
-    '  .hero, .acc-block, .reviews-block, .sheet {',
+    '  .hero, .acc-block, .practice-gallery, .reviews-block, .sheet {',
     '    background: linear-gradient(135deg, rgba(255,255,255,0.38), rgba(255,255,255,0.18));',
     '    backdrop-filter: saturate(1.05);',
     '    -webkit-backdrop-filter: saturate(1.05);',
@@ -295,6 +303,185 @@ function injectGlassSurfaceStyles() {
     '}'
   ].join('\n');
   document.head.appendChild(style);
+}
+
+function injectPracticeGallery() {
+  const reviews = document.querySelector('.reviews-block');
+  if (!reviews || document.querySelector('.practice-gallery')) return;
+
+  const images = [
+    { src: 'assets/practice-gallery/alx-0753.jpg', alt: 'Заур Акоев подбирает оттенок зубов на консультации' },
+    { src: 'assets/practice-gallery/alx-0887.jpg', alt: 'Обсуждение цифровой модели с пациенткой' },
+    { src: 'assets/practice-gallery/alx-0382.jpg', alt: 'Врач и пациент после консультации' },
+    { src: 'assets/practice-gallery/alx-0853.jpg', alt: 'Подбор оттенка будущей реставрации' },
+    { src: 'assets/practice-gallery/alx-0203.jpg', alt: 'Демонстрация модели зубного ряда' },
+    { src: 'assets/practice-gallery/alx-0711.jpg', alt: 'Осмотр перед зеркалом в кабинете' },
+    { src: 'assets/practice-gallery/alx-1363.jpg', alt: 'Фотодиагностика улыбки' },
+    { src: 'assets/practice-gallery/alx-0408.jpg', alt: 'Рабочий момент во время приема' },
+    { src: 'assets/practice-gallery/alx-0456.jpg', alt: 'Проверка окклюзии на приеме' }
+  ];
+
+  if (!document.querySelector('#practice-gallery-tuning')) {
+    const style = document.createElement('style');
+    style.id = 'practice-gallery-tuning';
+    style.textContent = [
+      '.practice-gallery {',
+      '  border: 1px solid var(--card-border);',
+      '  border-radius: var(--r);',
+      '  padding: 22px;',
+      '  overflow: hidden;',
+      '}',
+      '.practice-gallery-head {',
+      '  display: grid;',
+      '  grid-template-columns: minmax(0, 1fr);',
+      '  gap: 8px;',
+      '  margin-bottom: 14px;',
+      '}',
+      '.practice-gallery-title {',
+      '  font-family: var(--serif);',
+      '  font-size: 30px;',
+      '  font-weight: 400;',
+      '  line-height: 1.04;',
+      '  color: var(--ink);',
+      '}',
+      '.practice-gallery-sub {',
+      '  max-width: 34em;',
+      '  font-size: 12.5px;',
+      '  font-weight: 300;',
+      '  line-height: 1.55;',
+      '  color: var(--ink-soft);',
+      '}',
+      '.practice-gallery-main {',
+      '  display: block;',
+      '  width: 100%;',
+      '  padding: 0;',
+      '  border: 0;',
+      '  border-radius: 18px;',
+      '  overflow: hidden;',
+      '  background: rgba(255,255,255,0.24);',
+      '  cursor: pointer;',
+      '  box-shadow: 0 12px 30px rgba(13,24,42,0.12);',
+      '}',
+      '.practice-gallery-main img {',
+      '  display: block;',
+      '  width: 100%;',
+      '  aspect-ratio: 16 / 10;',
+      '  object-fit: cover;',
+      '  object-position: center center;',
+      '}',
+      '.practice-gallery-strip, .practice-gallery-all {',
+      '  display: grid;',
+      '  grid-template-columns: repeat(4, minmax(0, 1fr));',
+      '  gap: 7px;',
+      '  margin-top: 8px;',
+      '}',
+      '.practice-gallery-all {',
+      '  grid-template-columns: repeat(3, minmax(0, 1fr));',
+      '  margin-top: 12px;',
+      '}',
+      '.practice-gallery-strip[hidden], .practice-gallery-all[hidden] {',
+      '  display: none;',
+      '}',
+      '.practice-gallery-thumb {',
+      '  min-width: 0;',
+      '  padding: 0;',
+      '  border: 1.5px solid transparent;',
+      '  border-radius: 12px;',
+      '  overflow: hidden;',
+      '  background: rgba(255,255,255,0.18);',
+      '  cursor: pointer;',
+      '}',
+      '.practice-gallery-thumb.is-active {',
+      '  border-color: rgba(61,82,213,0.72);',
+      '}',
+      '.practice-gallery-thumb img {',
+      '  display: block;',
+      '  width: 100%;',
+      '  aspect-ratio: 1 / 0.72;',
+      '  object-fit: cover;',
+      '  object-position: center center;',
+      '}',
+      '.practice-gallery-open {',
+      '  width: 100%;',
+      '  margin-top: 14px;',
+      '  padding: 13px 18px;',
+      '  border: 1.5px solid rgba(12,26,56,0.72);',
+      '  border-radius: 999px;',
+      '  background: rgba(255,255,255,0.24);',
+      '  color: #0C1A38;',
+      '  font: 400 13.5px var(--sans, Inter, sans-serif);',
+      '  letter-spacing: 0.02em;',
+      '  cursor: pointer;',
+      '}',
+      '.practice-gallery-open:active, .practice-gallery-thumb:active, .practice-gallery-main:active {',
+      '  transform: scale(0.985);',
+      '}',
+      '@media (max-width: 380px) {',
+      '  .practice-gallery { padding: 20px; }',
+      '  .practice-gallery-title { font-size: 27px; }',
+      '}'
+    ].join('\n');
+    document.head.appendChild(style);
+  }
+
+  const gallery = document.createElement('section');
+  gallery.className = 'practice-gallery';
+  gallery.setAttribute('aria-labelledby', 'practice-gallery-title');
+  gallery.innerHTML = [
+    '<div class="practice-gallery-head">',
+    '  <h2 class="practice-gallery-title" id="practice-gallery-title">Как проходит приём</h2>',
+    '  <p class="practice-gallery-sub">Несколько кадров с консультации, подбора оттенка и цифровой диагностики.</p>',
+    '</div>',
+    '<button class="practice-gallery-main" type="button" aria-label="Показать выбранное фото крупнее">',
+    '  <img src="' + images[0].src + '" alt="' + images[0].alt + '" loading="lazy">',
+    '</button>',
+    '<div class="practice-gallery-strip" aria-label="Главные фотографии приема"></div>',
+    '<div class="practice-gallery-all" hidden aria-label="Все фотографии приема"></div>',
+    '<button class="practice-gallery-open" type="button" aria-expanded="false">Смотреть все 9 фото</button>'
+  ].join('');
+
+  const mainImg = gallery.querySelector('.practice-gallery-main img');
+  const strip = gallery.querySelector('.practice-gallery-strip');
+  const all = gallery.querySelector('.practice-gallery-all');
+  const openBtn = gallery.querySelector('.practice-gallery-open');
+
+  function makeThumb(image, index) {
+    const thumb = document.createElement('button');
+    thumb.type = 'button';
+    thumb.className = 'practice-gallery-thumb' + (index === 0 ? ' is-active' : '');
+    thumb.setAttribute('aria-label', 'Показать фото ' + (index + 1));
+    thumb.innerHTML = '<img src="' + image.src + '" alt="" loading="eager">';
+    thumb.addEventListener('click', function() {
+      mainImg.src = image.src;
+      mainImg.alt = image.alt;
+      gallery.querySelectorAll('.practice-gallery-thumb').forEach(function(node) {
+        node.classList.toggle('is-active', node === thumb);
+      });
+    });
+    return thumb;
+  }
+
+  images.slice(0, 4).forEach(function(image, index) {
+    strip.appendChild(makeThumb(image, index));
+  });
+
+  images.forEach(function(image, index) {
+    all.appendChild(makeThumb(image, index));
+  });
+
+  gallery.querySelector('.practice-gallery-main').addEventListener('click', function() {
+    openBtn.click();
+  });
+
+  openBtn.addEventListener('click', function() {
+    const open = all.hidden;
+    all.hidden = !open;
+    strip.hidden = open;
+    openBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    openBtn.textContent = open ? 'Скрыть фото' : 'Смотреть все 9 фото';
+  });
+
+  reviews.before(gallery);
 }
 
 function injectReviewsCut() {
@@ -313,6 +500,7 @@ function injectReviewsCut() {
       '  align-items: center;',
       '  gap: 14px;',
       '  padding: 22px 24px;',
+      '  cursor: pointer;',
       '}',
       '.reviews-block:not(.reviews-open) .block-title {',
       '  margin: 0;',
@@ -363,15 +551,25 @@ function injectReviewsCut() {
     card.classList.add('review-extra');
   });
 
+  function toggleReviews() {
+    const open = block.classList.toggle('reviews-open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    btn.textContent = open ? 'Скрыть отзывы' : 'Показать отзывы';
+  }
+
   const btn = document.createElement('button');
   btn.type = 'button';
   btn.className = 'reviews-toggle';
   btn.setAttribute('aria-expanded', 'false');
   btn.textContent = 'Показать отзывы';
-  btn.addEventListener('click', function() {
-    const open = block.classList.toggle('reviews-open');
-    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    btn.textContent = open ? 'Скрыть отзывы' : 'Показать отзывы';
+  btn.addEventListener('click', function(event) {
+    event.stopPropagation();
+    toggleReviews();
+  });
+  block.addEventListener('click', function() {
+    if (!block.classList.contains('reviews-open')) {
+      toggleReviews();
+    }
   });
   list.after(btn);
 }
