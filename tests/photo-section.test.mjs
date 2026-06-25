@@ -23,6 +23,49 @@ for (const snippet of requiredSnippets) {
   }
 }
 
+function getInjectedStyleBlock(selector) {
+  const start = html.indexOf(`'${selector} {',`);
+  if (start === -1) return '';
+
+  const end = html.indexOf("      '}',", start);
+  if (end === -1) return '';
+
+  return html.slice(start, end + "      '}',".length);
+}
+
+const closedReviewToggleStyle = getInjectedStyleBlock(
+  '.reviews-block:not(.reviews-open) .reviews-toggle'
+);
+
+if (!closedReviewToggleStyle) {
+  throw new Error('Missing collapsed review toggle style block.');
+}
+
+for (const snippet of [
+  "'  border: 1px solid var(--border);'",
+  "'  background: transparent;'",
+  "'  color: var(--ink-soft);'",
+  "'  display: flex;'",
+  "'  align-items: center;'",
+  "'  justify-content: center;'",
+]) {
+  if (!closedReviewToggleStyle.includes(snippet)) {
+    throw new Error(`Collapsed review toggle should match accordion plus styling: ${snippet}`);
+  }
+}
+
+const closedReviewToggleIconStyle = getInjectedStyleBlock(
+  '.reviews-block:not(.reviews-open) .reviews-toggle::before'
+);
+
+if (!closedReviewToggleIconStyle) {
+  throw new Error('Missing collapsed review toggle icon style block.');
+}
+
+if (!closedReviewToggleIconStyle.includes("'  font: 300 18px/18px var(--sans, Inter, sans-serif);'")) {
+  throw new Error('Collapsed review plus should use the same visual line height as accordion icons.');
+}
+
 const galleryIndex = html.indexOf('Как проходит приём');
 const reviewsIndex = html.indexOf('Отзывы пациентов');
 
