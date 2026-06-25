@@ -13,6 +13,7 @@ const requiredSnippets = [
   'practice-gallery-open',
   'Отзывы пациентов',
   "block.addEventListener('click', toggleReviews);",
+  "btn.setAttribute('aria-label', open ? 'Свернуть отзывы' : 'Показать отзывы');",
   'event.stopPropagation();',
 ];
 
@@ -63,6 +64,33 @@ if (!closedReviewToggleIconStyle) {
 
 if (!closedReviewToggleIconStyle.includes("'  font: 300 18px/18px var(--sans, Inter, sans-serif);'")) {
   throw new Error('Collapsed review plus should use the same visual line height as accordion icons.');
+}
+
+const openReviewBlockStyle = getInjectedStyleBlock('.reviews-block.reviews-open');
+
+if (!openReviewBlockStyle) {
+  throw new Error('Missing expanded review block layout style.');
+}
+
+for (const snippet of [
+  "'  display: grid;'",
+  "'  grid-template-columns: minmax(0, 1fr) 44px;'",
+]) {
+  if (!openReviewBlockStyle.includes(snippet)) {
+    throw new Error(`Expanded review block should keep the toggle in the header: ${snippet}`);
+  }
+}
+
+const openReviewToggleIconStyle = getInjectedStyleBlock(
+  '.reviews-block.reviews-open .reviews-toggle::before'
+);
+
+if (!openReviewToggleIconStyle) {
+  throw new Error('Missing expanded review toggle icon style block.');
+}
+
+if (!openReviewToggleIconStyle.includes("'  content: \"×\";'")) {
+  throw new Error('Expanded review toggle should become a close icon.');
 }
 
 const galleryIndex = html.indexOf('Как проходит приём');

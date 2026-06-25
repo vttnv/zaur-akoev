@@ -511,20 +511,44 @@ function injectReviewsCut() {
       '.reviews-block:not(.reviews-open) .review-extra {',
       '  display: none;',
       '}',
+      '.reviews-block.reviews-open {',
+      '  display: grid;',
+      '  grid-template-columns: minmax(0, 1fr) 44px;',
+      '  align-items: start;',
+      '  gap: 16px 14px;',
+      '  cursor: pointer;',
+      '}',
+      '.reviews-block.reviews-open .block-title {',
+      '  margin: 0;',
+      '}',
+      '.reviews-block.reviews-open .reviews-scroll {',
+      '  grid-column: 1 / -1;',
+      '}',
       '.reviews-toggle {',
-      '  display: block;',
-      '  width: 100%;',
-      '  margin: 14px 0 0;',
-      '  padding: 13px 18px;',
-      '  border: 1.5px solid rgba(12,26,56,0.72);',
-      '  border-radius: 999px;',
-      '  background: rgba(255,255,255,0.24);',
-      '  color: #0C1A38;',
-      '  font: 400 14px var(--sans, Inter, sans-serif);',
-      '  letter-spacing: 0.02em;',
+      '  width: 30px;',
+      '  height: 30px;',
+      '  margin: 0;',
+      '  padding: 0;',
+      '  border: 1px solid var(--border);',
+      '  border-radius: 50%;',
+      '  background: transparent;',
+      '  color: var(--ink-soft);',
+      '  display: flex;',
+      '  align-items: center;',
+      '  justify-content: center;',
+      '  justify-self: end;',
+      '  grid-column: 2;',
+      '  grid-row: 1;',
+      '  font-size: 0;',
+      '  line-height: 0;',
       '  cursor: pointer;',
       '  backdrop-filter: saturate(1.04);',
       '  -webkit-backdrop-filter: saturate(1.04);',
+      '}',
+      '.reviews-toggle::before {',
+      '  content: "+";',
+      '  display: block;',
+      '  font: 300 18px/18px var(--sans, Inter, sans-serif);',
       '}',
       '.reviews-block:not(.reviews-open) .reviews-toggle {',
       '  width: 30px;',
@@ -546,6 +570,9 @@ function injectReviewsCut() {
       '  display: block;',
       '  font: 300 18px/18px var(--sans, Inter, sans-serif);',
       '}',
+      '.reviews-block.reviews-open .reviews-toggle::before {',
+      '  content: "×";',
+      '}',
       '.reviews-toggle:active {',
       '  transform: scale(0.98);',
       '}'
@@ -560,13 +587,15 @@ function injectReviewsCut() {
   function toggleReviews() {
     const open = block.classList.toggle('reviews-open');
     btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    btn.textContent = open ? 'Скрыть отзывы' : 'Показать отзывы';
+    btn.setAttribute('aria-label', open ? 'Свернуть отзывы' : 'Показать отзывы');
+    btn.textContent = open ? 'Свернуть отзывы' : 'Показать отзывы';
   }
 
   const btn = document.createElement('button');
   btn.type = 'button';
   btn.className = 'reviews-toggle';
   btn.setAttribute('aria-expanded', 'false');
+  btn.setAttribute('aria-label', 'Показать отзывы');
   btn.textContent = 'Показать отзывы';
   btn.addEventListener('click', function(event) {
     event.stopPropagation();
