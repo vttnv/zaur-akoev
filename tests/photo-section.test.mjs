@@ -85,6 +85,24 @@ const openReviewToggleIconStyle = getInjectedStyleBlock(
   '.reviews-block.reviews-open .reviews-toggle::before'
 );
 
+const openReviewToggleStyle = getInjectedStyleBlock(
+  '.reviews-block.reviews-open .reviews-toggle'
+);
+
+if (!openReviewToggleStyle) {
+  throw new Error('Missing expanded review toggle active style block.');
+}
+
+for (const snippet of [
+  "'  border-color: rgba(61,82,213,0.28);'",
+  "'  background: var(--accent-light);'",
+  "'  color: var(--accent);'",
+]) {
+  if (!openReviewToggleStyle.includes(snippet)) {
+    throw new Error(`Expanded review close icon should use the blue active styling: ${snippet}`);
+  }
+}
+
 if (!openReviewToggleIconStyle) {
   throw new Error('Missing expanded review toggle icon style block.');
 }
