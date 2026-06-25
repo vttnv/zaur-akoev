@@ -572,11 +572,7 @@ function injectReviewsCut() {
     event.stopPropagation();
     toggleReviews();
   });
-  block.addEventListener('click', function() {
-    if (!block.classList.contains('reviews-open')) {
-      toggleReviews();
-    }
-  });
+  block.addEventListener('click', toggleReviews);
   list.after(btn);
 }
 

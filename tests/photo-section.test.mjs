@@ -12,8 +12,7 @@ const requiredSnippets = [
   'practice-gallery',
   'practice-gallery-open',
   'Отзывы пациентов',
-  "block.addEventListener('click'",
-  "if (!block.classList.contains('reviews-open'))",
+  "block.addEventListener('click', toggleReviews);",
   'event.stopPropagation();',
 ];
 
