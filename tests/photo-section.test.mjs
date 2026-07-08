@@ -3,18 +3,21 @@ import { resolve } from 'node:path';
 
 const root = resolve(import.meta.dirname, '..');
 const html = readFileSync(resolve(root, 'index.html'), 'utf8');
+const variant = readFileSync(resolve(root, 'index-dark-image-bg.html'), 'utf8');
 
 const requiredSnippets = [
-  'injectPracticeGallery();',
-  'function injectPracticeGallery()',
+  'Заур Акоев',
+  'Врач-стоматолог ортопед',
+  'assets/dark-abstract-background.jpeg',
+  'position: fixed;',
   'Как проходит приём',
   'Несколько кадров с консультации',
   'practice-gallery',
   'practice-gallery-open',
   'Отзывы пациентов',
-  "block.addEventListener('click', toggleReviews);",
-  "btn.setAttribute('aria-label', open ? 'Свернуть отзывы' : 'Показать отзывы');",
-  'event.stopPropagation();',
+  'buildGallery();',
+  'function buildGallery()',
+  'block.classList.toggle("reviews-open")',
 ];
 
 for (const snippet of requiredSnippets) {
@@ -23,99 +26,36 @@ for (const snippet of requiredSnippets) {
   }
 }
 
-function getInjectedStyleBlock(selector) {
-  const start = html.indexOf(`'${selector} {',`);
-  if (start === -1) return '';
-
-  const end = html.indexOf("      '}',", start);
-  if (end === -1) return '';
-
-  return html.slice(start, end + "      '}',".length);
+if (html !== variant) {
+  throw new Error('Published index.html should match the first-background variant.');
 }
 
-const closedReviewToggleStyle = getInjectedStyleBlock(
-  '.reviews-block:not(.reviews-open) .reviews-toggle'
-);
-
-if (!closedReviewToggleStyle) {
-  throw new Error('Missing collapsed review toggle style block.');
-}
-
-for (const snippet of [
-  "'  border: 1px solid var(--border);'",
-  "'  background: transparent;'",
-  "'  color: var(--ink-soft);'",
-  "'  display: flex;'",
-  "'  align-items: center;'",
-  "'  justify-content: center;'",
-]) {
-  if (!closedReviewToggleStyle.includes(snippet)) {
-    throw new Error(`Collapsed review toggle should match accordion plus styling: ${snippet}`);
+for (const obsoleteWarmToken of ['#d8c6aa', '216, 198, 170']) {
+  if (html.includes(obsoleteWarmToken)) {
+    throw new Error(`Warm yellow highlight should be replaced: ${obsoleteWarmToken}`);
   }
 }
 
-const closedReviewToggleIconStyle = getInjectedStyleBlock(
-  '.reviews-block:not(.reviews-open) .reviews-toggle::before'
-);
-
-if (!closedReviewToggleIconStyle) {
-  throw new Error('Missing collapsed review toggle icon style block.');
-}
-
-if (!closedReviewToggleIconStyle.includes("'  font: 300 18px/18px var(--sans, Inter, sans-serif);'")) {
-  throw new Error('Collapsed review plus should use the same visual line height as accordion icons.');
-}
-
-const openReviewBlockStyle = getInjectedStyleBlock('.reviews-block.reviews-open');
-
-if (!openReviewBlockStyle) {
-  throw new Error('Missing expanded review block layout style.');
-}
-
-for (const snippet of [
-  "'  display: grid;'",
-  "'  grid-template-columns: minmax(0, 1fr) 44px;'",
+for (const blueHighlightSnippet of [
+  '--warm: #93c4ff;',
+  '.svc-p {\n      color: var(--warm);',
+  '.rev-stars {\n      display: flex;',
+  'rgba(147, 196, 255, 0.14)',
 ]) {
-  if (!openReviewBlockStyle.includes(snippet)) {
-    throw new Error(`Expanded review block should keep the toggle in the header: ${snippet}`);
+  if (!html.includes(blueHighlightSnippet)) {
+    throw new Error(`Missing blue highlight styling: ${blueHighlightSnippet}`);
   }
 }
 
-const openReviewToggleIconStyle = getInjectedStyleBlock(
-  '.reviews-block.reviews-open .reviews-toggle::before'
-);
-
-const openReviewToggleStyle = getInjectedStyleBlock(
-  '.reviews-block.reviews-open .reviews-toggle'
-);
-
-if (!openReviewToggleStyle) {
-  throw new Error('Missing expanded review toggle active style block.');
-}
-
-for (const snippet of [
-  "'  border-color: rgba(61,82,213,0.28);'",
-  "'  background: var(--accent-light);'",
-  "'  color: var(--accent);'",
-]) {
-  if (!openReviewToggleStyle.includes(snippet)) {
-    throw new Error(`Expanded review close icon should use the blue active styling: ${snippet}`);
-  }
-}
-
-if (!openReviewToggleIconStyle) {
-  throw new Error('Missing expanded review toggle icon style block.');
-}
-
-if (!openReviewToggleIconStyle.includes("'  content: \"×\";'")) {
-  throw new Error('Expanded review toggle should become a close icon.');
+if (html.includes('dark-abstract-background-2.jpeg')) {
+  throw new Error('Published page should use the first abstract background, not the second.');
 }
 
 const galleryIndex = html.indexOf('Как проходит приём');
 const reviewsIndex = html.indexOf('Отзывы пациентов');
 
 if (galleryIndex === -1 || reviewsIndex === -1 || galleryIndex > reviewsIndex) {
-  throw new Error('The practice gallery should be defined before the reviews block content.');
+  throw new Error('The practice gallery should appear before the reviews block.');
 }
 
 const images = [
@@ -134,4 +74,8 @@ for (const image of images) {
   if (!existsSync(resolve(root, 'assets', 'practice-gallery', image))) {
     throw new Error(`Missing gallery image asset: ${image}`);
   }
+}
+
+if (!existsSync(resolve(root, 'assets', 'dark-abstract-background.jpeg'))) {
+  throw new Error('Missing first abstract background asset.');
 }
