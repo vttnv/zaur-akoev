@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 const root = resolve(import.meta.dirname, '..');
 const html = readFileSync(resolve(root, 'index.html'), 'utf8');
 const variant = readFileSync(resolve(root, 'index-dark-image-bg.html'), 'utf8');
+const light = readFileSync(resolve(root, 'index-light.html'), 'utf8');
 
 const requiredSnippets = [
   'Заур Акоев',
@@ -28,6 +29,20 @@ for (const snippet of requiredSnippets) {
 
 if (html !== variant) {
   throw new Error('Published index.html should match the first-background variant.');
+}
+
+for (const lightSnippet of [
+  'Заур Акоев — Врач-стоматолог ортопед',
+  'body { background: #E0DFDB;',
+  'This page requires JavaScript to display.',
+]) {
+  if (!light.includes(lightSnippet)) {
+    throw new Error(`Missing expected light-version snippet: ${lightSnippet}`);
+  }
+}
+
+if (light.includes('dark-abstract-background.jpeg')) {
+  throw new Error('Light version should not use the dark abstract background.');
 }
 
 for (const obsoleteWarmToken of ['#d8c6aa', '216, 198, 170']) {
